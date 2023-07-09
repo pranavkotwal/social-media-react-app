@@ -1,7 +1,10 @@
 import styles from '../styles/navbar.module.css'
 import { NavLink }  from 'react-router-dom';
+import { useAuth } from '../hooks';
+
 
 const Navbar = () =>{
+    const auth = useAuth()
     return (
         <div className={styles.nav}>
             <div className={styles.leftDiv}>
@@ -11,23 +14,29 @@ const Navbar = () =>{
             </div>
 
             <div className={styles.rightNav}>
-                <div className={styles.user}>
-                    <NavLink to="/">
+                {auth.user && (<div className={styles.user}>
+                    <NavLink to="/settings">
                         <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" alt="" className={styles.userDp} />
                     </NavLink>
-                    <span>Pranav</span>
+                    <span>{auth.user.name}</span>
                 </div>
+                )}
                 <div className={styles.navLinks}>
                     <ul>
+                        {auth.user? (
+                            <>
+                            <li onClick={auth.logout}>Logout</li>
+                            </>
+                        ):(
+                            <>
                         <li>
                             <NavLink to="/login">Log In</NavLink>
                         </li>
                         <li>
-                            <NavLink to="/">Log Out</NavLink>
+                            <NavLink to="/register">Register</NavLink>
                         </li>
-                        <li>
-                            <NavLink to="/">Register</NavLink>
-                        </li>
+                        </>
+                        )}
                     </ul>
                 </div>
             </div>

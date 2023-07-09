@@ -1,54 +1,40 @@
-import { useEffect, useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-
-import { getPosts } from '../api';
-import { Home } from '../pages';
-import Loader from './Loader';
-import Navbar from './Navbar';
-import Login from '../pages/Login';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import { useAuth } from '../hooks';
+import { Home, Login, Signup, Settings } from '../pages';
+import { Loader, Navbar } from './';
 
-const About = () => {
-  return <h1>About</h1>;
-};
-const UserInfo = () => {
-  return <h1>User Info</h1>;
-};
+function PrivateRoute({ children, ...rest }) {
+  const auth = useAuth();
+
+  if (!auth.user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+}
+
 const Page404 = () => {
-  return <h1>Nothing found</h1>;
+  return <h1>404</h1>;
 };
 
 function App() {
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const auth = useAuth()
-
-  // useEffect(() => {
-  //   const fetchPosts = async () => {
-  //     const response = await getPosts();
-  //     console.log('response', response);
-  //     if (response.success) {
-  //       setPosts(response.data.posts);
-  //     }
-  //     setLoading(false);
-  //   };
-  //   fetchPosts();
-  // }, []);
+  const auth = useAuth();
 
   if (auth.loading) {
     return <Loader />;
   }
+
   return (
     <div className="App">
       <BrowserRouter>
       <Navbar />
-
+        
         <Routes>
-          <Route exact path="/" element={<Home posts={posts} />}></Route>
-          <Route exact path="/about" element={<About />}></Route>
-          <Route exact path="/user/:asdfa" element={<UserInfo />}></Route>
-          <Route exact path="/login" element={<Login />}></Route>
-          <Route path="*" element={<Page404 />}></Route>
+          <Route path="/" element={<Home />} />
+          <Route path="/register" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
+          <Route path="/*" element={<Page404 />} />
         </Routes>
       </BrowserRouter>
     </div>

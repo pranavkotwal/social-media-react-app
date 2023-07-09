@@ -1,16 +1,20 @@
-import { createContext } from "react"
-import { useProvideAuth } from "../hooks"
+import { createContext } from 'react';
 
-const initalState={
-    user: null,
-    login:() =>{},
-    logout:() => {},
-    loading:true
-}
+import { useProvideAuth } from '../hooks';
 
-export const AuthContext= createContext(initalState)
+const initialState = {
+  user: null,
+  login: () => {},
+  logout: () => {},
+  loading: true,
+  signup: () => {},
+  updateUser: () => {},
+};
 
-export const AuthProvider = ({children})=>{
-    const auth = useProvideAuth()
-    return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>
-}
+export const AuthContext = createContext(initialState);
+
+export const AuthProvider = ({ children }) => {
+  const auth = useProvideAuth();
+
+  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
+};
