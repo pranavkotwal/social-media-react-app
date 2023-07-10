@@ -2,6 +2,7 @@ import styles from '../styles/home.module.css';
 import { useEffect, useState } from 'react';
 import { getPosts } from '../api';
 import { Comment, Loader } from '../components';
+import { Link } from 'react-router-dom';
 
 
 
@@ -10,6 +11,7 @@ const Home = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState([]);
 
+ 
   useEffect(() => {
     const fetchPosts = async () => {
       const response = await getPosts();
@@ -27,9 +29,13 @@ const Home = () => {
   if (loading) {
     return <Loader />;
   }
+ 
+
   return (
     <div className={styles.postList} >
       {posts.map((post) => (
+       
+        
         <div className={styles.postWrapper} key={`posts-${post._id}`}>
           <div className={styles.postHeader}>
             <div className={styles.postAvatar}>
@@ -38,7 +44,14 @@ const Home = () => {
                 alt="user-pic"
               />
               <div>
-                <span className={styles.postAuthor}>{post.user.name}</span>
+                
+                <Link to={{
+                  pathname: `/user/${post.user._id}`,
+                  state: {
+                    user: post.user
+                  }
+                }}
+                className={styles.postAuthor}>{post.user.name} User</Link>
                 <span className={styles.postTime}>a minute ago</span>
               </div>
             </div>
@@ -76,7 +89,8 @@ const Home = () => {
       ))}
     </div>
   );
-};
+}
+
 
 
 
