@@ -10,7 +10,7 @@ const UserProfile = () => {
   console.log(location)
   
 
-  const user = {}
+  const {user={}} = location.state
   
 
   return (
@@ -24,12 +24,12 @@ const UserProfile = () => {
 
       <div className={styles.field}>
         <div className={styles.fieldLabel}>Email</div>
-        <div className={styles.fieldValue}>{user?.email}</div>
+        <div className={styles.fieldValue}>{user.email}</div>
       </div>
 
       <div className={styles.field}>
       <div className={styles.fieldLabel}>Name</div>
-       <div className={styles.fieldValue}>{user?.name}</div>
+       <div className={styles.fieldValue}>{user.name}</div>
         
         
       </div>
