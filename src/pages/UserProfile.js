@@ -1,17 +1,55 @@
-
-import { useLocation} from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useToasts } from 'react-toast-notifications';
 
 import styles from '../styles/settings.module.css';
-
-
+import { useEffect, useState } from 'react';
+import { fetchUserProfile } from '../api';
+import { Loader } from '../components';
+import { useAuth } from '../hooks';
 
 const UserProfile = () => {
-  const location = useLocation()
-  console.log(location)
-  
+  const auth = useAuth();
+  const [user, setUser] = useState({});
+  const [loading, setLoading] = useState(true);
+  const { userId } = useParams();
+  const { addToast } = useToasts();
+  const { navigate } = useNavigate();
+  console.log('AUth', auth);
 
-  const {user={}} = location.state
-  
+  console.log('userId', userId);
+
+  useEffect(() => {
+    const getUser = async () => {
+      const response = await fetchUserProfile(userId);
+
+      if (response.success) {
+        setUser(response.data.user);
+      } else {
+        addToast(response.message, {
+          appearance: 'error',
+        });
+        return navigate('/');
+      }
+      setLoading(false);
+    };
+    getUser();
+  }, [userId, navigate, addToast]);
+
+  if (loading) {
+    return <Loader />;
+  }
+  const checkIfUserIsAFriend = () => {
+    const friends = auth.user.friends;
+    const friendIds = friends.map((friend) => friend.to_user._id);
+    const index = friendIds.indexOf(userId);
+
+    if (index !== -1) {
+      return true;
+    }
+    return false;
+  };
+
+  const showAddFriendBtn = checkIfUserIsAFriend();
 
   return (
     <div className={styles.settings}>
@@ -28,25 +66,16 @@ const UserProfile = () => {
       </div>
 
       <div className={styles.field}>
-      <div className={styles.fieldLabel}>Name</div>
-       <div className={styles.fieldValue}>{user.name}</div>
-        
-        
+        <div className={styles.fieldLabel}>Name</div>
+        <div className={styles.fieldValue}>{user.name}</div>
       </div>
 
-     
-
       <div className={styles.btnGrp}>
-      <button
-            className={`button ${styles.saveBtn}`}>
-            Add Friend
-      </button>
-        
-      <button
-            className={`button ${styles.saveBtn}`}>
-            Remove Friend
-      </button>
-        
+        {checkIfUserIsAFriend() ? (
+          <button className={`button ${styles.saveBtn}`}>Add Friend</button>
+        ) : (
+          <button className={`button ${styles.saveBtn}`}>Remove Friend</button>
+        )}
       </div>
     </div>
   );

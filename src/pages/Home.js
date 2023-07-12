@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { getPosts } from '../api';
 import { Comment, Loader } from '../components';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../hooks';
 
 
 
@@ -10,6 +11,8 @@ import { Link } from 'react-router-dom';
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState([]);
+  const auth = useAuth()
+  console.log(auth.user)
 
  
   useEffect(() => {
@@ -34,6 +37,7 @@ const Home = () => {
   return (
     <div className={styles.postList} >
       {posts.map((post) => (
+      
        
         
         <div className={styles.postWrapper} key={`posts-${post._id}`}>
@@ -47,7 +51,7 @@ const Home = () => {
                 
               <Link
                 to={`/user/${post.user._id}`}
-                  state={{ user: post.user }}
+                  state={{ user: auth.user }}
                   className={styles.postAuthor}
                   > 
                 {post.user.name} User
