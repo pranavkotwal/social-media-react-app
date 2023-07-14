@@ -241,14 +241,3 @@
 .addPostBtn:hover {
   cursor: pointer;
 }
-.postAvatar .postAuthor{
-  color:#616161;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 22px;
-  text-decoration: none;
-}
-.postAvatar .postAuthor:hover {
-  text-decoration: underline;
-}
