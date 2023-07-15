@@ -36,7 +36,7 @@ const customFetch = async (url, { body, ...customConfig }) => {
 
     throw new Error(data.message);
   } catch (error) {
-    console.error('error');
+    console.error('error',error);
     return {
       message: error.message,
       success: false,
@@ -119,5 +119,13 @@ export const createComment = (content,postId) => {
    
   });
 };
+
+export const toggleLike = (itemId,itemType) => {
+  return customFetch(API_URLS.toggleLike(itemId,itemType), {
+    method: 'POST',
+    
+  });
+};
+
 
 
